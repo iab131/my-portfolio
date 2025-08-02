@@ -9,8 +9,7 @@ import { EvervaultCard, Icon } from "./ui/evervault-card";
 import { CometCard } from "@/components/ui/comet-card";
 const About = () => {
   return (
-    <div className="px-4 sm:px-10">
-      {/* initial="hidden" whileInView="show" className='flex flex-col items-center justify-center text-center mt-10' */}
+    <div className="px-4 sm:px-10 mt-10">
       <div className="flex flex-col justify-center items-start mt-10 max-w-8xl">
         <div>
           <motion.div
@@ -64,31 +63,34 @@ type TiltCardProps = {
 
 const TiltCard = ({ title, index, icon }: TiltCardProps) => {
   return (
-    <CometCard>
-      <motion.div
-        variants={fadeIn("up", "spring", index * 0.5, 0.75)}
-        viewport={{ once: false, amount: 0.25 }}
-        initial="hidden"
-        animate="show"
-        className=" flex w-60 cursor-pointer flex-col items-stretch rounded-[24px]  bg-[#1F2121] p-2  md:p-2"
-        aria-label={title}
-        style={{
-          transformStyle: "preserve-3d",
-          transform: "none",
-          opacity: 1,
-        }}
-      >
-        <div className="mx-2 flex-1">
-          <div className="relative mt-2 aspect-[3/4] w-full">
-            <EvervaultCard text={icon ?? "hover"} className="rounded-lg " />
+    <motion.div
+      variants={fadeIn("right", "spring", index * 0.5, 0.75)}
+      viewport={{ once: false, amount: 0.25 }}
+      initial="hidden"
+      whileInView="show"
+    >
+      <CometCard>
+        <div
+          className=" flex w-60 cursor-pointer flex-col items-stretch rounded-[24px] bg-gradient-to-br from-slate-800/90 to-slate-700/80 backdrop-blur-sm border border-slate-600/30 p-2"
+          aria-label={title}
+          style={{
+            transformStyle: "preserve-3d",
+            transform: "none",
+            opacity: 1,
+          }}
+        >
+          <div className="mx-2 flex-1">
+            <div className="relative mt-2 aspect-[1/1] w-full">
+              <EvervaultCard text={icon ?? "hover"} className="rounded-lg " />
+            </div>
+          </div>
+          <div className="mt-2 flex flex-shrink-0 items-center justify-center p-2 font-mono text-white">
+            <div className="text-lg text-center text-white font-bold">{title}</div>
+            {/* <div className="text-xs text-gray-300 opacity-50">#F7RA</div> */}
           </div>
         </div>
-        <div className="mt-2 flex flex-shrink-0 items-center justify-between p-4 font-mono text-white">
-          <div className="text-xs">{title}</div>
-          <div className="text-xs text-gray-300 opacity-50">#F7RA</div>
-        </div>
-      </motion.div>
-    </CometCard>
+      </CometCard>
+    </motion.div>
   );
 };
 export default About;

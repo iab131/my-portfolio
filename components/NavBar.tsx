@@ -20,13 +20,14 @@ export function Navbar() {
       link: "#about",
     },
     {
-      name: "Pricing",
-      link: "#pricing",
+      name: "Projects",
+      link: "#projects",
     },
     {
-      name: "Projects",
-      link: "#Projects",
+      name: "Robots",
+      link: "#robot",
     },
+    
   ];
 
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);

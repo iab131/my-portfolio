@@ -49,15 +49,15 @@ export const EvervaultCard = ({
           randomString={randomString}
         />
         <div className="relative z-10 flex items-center justify-center">
-          <div className="relative h-44 w-44  rounded-full flex items-center justify-center text-white font-bold text-4xl">
-            <div className="absolute w-full h-full bg-gray-900/[0.8] blur-sm rounded-full" />
+          <div className="relative w-30 h-30  rounded-full flex items-center justify-center text-white font-bold text-4xl">
+            <div className="absolute w-full h-full bg-gradient-to-br from-cyan-500/50 to-blue-600/50 blur-sm rounded-full" />
             {typeof text === "string" ? (
               <span className="text-white z-20">{text}</span>
             ) : (
               <Image
                 src={text || web}
                 alt="icon"
-                className="z-20 w-24 object-contain"
+                className="z-20 w-20 object-contain"
               />
             )}
           </div>
@@ -68,7 +68,7 @@ export const EvervaultCard = ({
 };
 
 export function CardPattern({ mouseX, mouseY, randomString }: any) {
-  let maskImage = useMotionTemplate`radial-gradient(250px at ${mouseX}px ${mouseY}px, white, transparent)`;
+  let maskImage = useMotionTemplate`radial-gradient(150px at ${mouseX}px ${mouseY}px, white, transparent)`;
   let style = { maskImage, WebkitMaskImage: maskImage };
 
   return (
