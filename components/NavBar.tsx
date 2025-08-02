@@ -16,8 +16,8 @@ import BgBoxes from "./BgBoxes";
 export function Navbar() {
   const navItems = [
     {
-      name: "Features",
-      link: "#features",
+      name: "About",
+      link: "#about",
     },
     {
       name: "Pricing",
@@ -40,7 +40,7 @@ export function Navbar() {
           <NavbarLogo />
           <NavItems items={navItems} />
           <div className="flex items-center gap-4">
-            <NavbarButton variant="secondary">Login</NavbarButton>
+            {/* <NavbarButton variant="secondary">Login</NavbarButton> */}
             <NavbarButton variant="primary">Contact me</NavbarButton>
           </div>
         </NavBody>

@@ -4,7 +4,8 @@ import React from "react";
 import { Boxes } from "./ui/background-boxes";
 import { cn } from "@/lib/utils";
 import { TextGenerateEffect } from "./ui/text-generate-effect";
- 
+import { ChevronDownIcon } from '@heroicons/react/24/outline';
+
 export function BgBoxes() {
   return (
 
@@ -12,20 +13,29 @@ export function BgBoxes() {
       <div className="absolute inset-0 w-full h-screen bg-slate-900 z-5 [mask-image:radial-gradient(transparent,white)] pointer-events-none" />
  
       <Boxes />
-
-        <div className="z-10  px-4 max-w-3xl pointer-events-none flex flex-col -mt-60 relative">
+        
+        <div className="z-10  max-w-4xl pointer-events-none flex flex-col  relative">
+          <div className="bg-white/5 backdrop-blur-sm rounded-xl p-8 shadow-xl mx-4 sm:mx-10">
             <TextGenerateEffect
-              className=" text-5xl md:text-6xl lg:text-7xl font-extrabold mb-4 text-white drop-shadow"
-              words = "Hi, I’m Enhe 👋"
+              className="text-5xl md:text-6xl lg:text-7xl font-extrabold mb-4 -mt-8 drop-shadow-lg"
+              words="Hi, I’m Enhe 👋"
             />
-          <h2 className="text-xl md:text-2xl text-gray-300 mb-6">
-            I build interactive robots, intelligent systems, and immersive games.
-          </h2>
-          <p className="text-md md:text-lg text-gray-400 mb-8">
-            CS student at the University of Waterloo passionate about robotics, game dev, and 3D simulation.  
-            I create intuitive tools and bring physical systems to life through code.
-          </p>
+            <h2 className="text-xl md:text-2xl text-gray-200 mb-4 font-medium leading-snug">
+              I build <span className="text-white">interactive robots</span>, <span className="text-white">intelligent systems</span>, and <span className="text-white">immersive games</span>.
+            </h2>
+            <p className="text-md md:text-lg text-gray-400 leading-relaxed">
+              CS student at the University of Waterloo passionate about robotics, game dev, and 3D simulation.
+              <br className="hidden md:block" />
+              I create intuitive tools and bring physical systems to life through code.
+            </p>
+            <div className="flex justify-center items-center mt-7 -mb-5">
+              <a href="#about" aria-label="Scroll down">
+                <ChevronDownIcon className="animate-bounce pointer-events-auto text-blue-400 w-15 h-15 self-center cursor-pointer hover:text-blue-500 hover:scale-110  transition duration-200" />
+              </a>
+            </div>  
+          </div>
         </div>
+
     </div>
   );
 }
