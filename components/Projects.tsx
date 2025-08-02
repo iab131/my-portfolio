@@ -3,7 +3,7 @@
 import React from "react";
 import { CardBody, CardContainer, CardItem } from "@/components/ui/3d-card";
 import { motion, transform } from "framer-motion";
-import { textVariant } from "@/lib/motion";
+import { fadeIn, slideIn, textVariant, zoomIn } from "@/lib/motion";
 import { Project, projects } from "@/lib/constants";
 import Image from "next/image";
 import { FaLocationArrow } from "react-icons/fa";
@@ -38,7 +38,6 @@ const Projects = () => {
           />
         ))}
       </div>
-      <img src="/img/p1.svg" className="sm:hidden"/>
     </div>
   );
 };
@@ -47,6 +46,12 @@ export default Projects;
 
 const ProjectCard = ({ title, des, img, iconLists, link }: Project) => {
   return (
+    <motion.div 
+    
+      variants={fadeIn("up","spring", 0.5, 0.75)}
+      viewport={{ once: true, amount: 0.05 }}
+      initial="hidden"
+      whileInView="show">
     <CardContainer className="inter-var ">
       <CardBody className="relative group/card hover:shadow-2xl hover:shadow-emerald-500/[0.1] bg-gray-800 border-white/[0.2]  w-full md:w-[40rem] sm:w-[30rem] h-auto rounded-xl p-6 border  ">
         <CardItem
@@ -63,17 +68,17 @@ const ProjectCard = ({ title, des, img, iconLists, link }: Project) => {
           {des}
         </CardItem>
         <CardItem translateZ="100" className="w-full mt-4">
-          <div className="relative flex items-center justify-center w-full max-w-[570px] overflow-hidden sm:h-[40vh] h-[30vh]">
+          <div className="relative flex items-center justify-center w-full sm:h-[40vh] h-[30vh]">
             <div
-              className="relative w-full h-full overflow-hidden rounded-xl lg:rounded-3xl bg-gray-700/50  border-white/[0.2] border"
+              className="relative w-full h-full overflow-hidden rounded-xl lg:rounded-3xl bg-gray-700/50 border border-white/[0.2] flex items-center justify-center"
             >
-              <img src="/img/bg.png" alt="bgimg" />
+              <img src="/img/bg.png" alt="bgimg" className="absolute inset-0 w-full h-full object-cover" />
+              <Image
+                src={img}
+                className="relative top-10 z-10 w-auto h-auto max-w-[90%] max-h-[90%] object-contain rounded-2xl shadow-lg transform rotate-4"
+                alt="cover"
+              />
             </div>
-            <Image
-              src={img}
-              className="z-10 absolute top-12 h-[100%] w-auto object-contain rounded-xl group-hover/card:shadow-xl transform rotate-3"
-              alt="cover"
-            />
           </div>
         </CardItem>
         <div className="flex justify-between items-center mt-6">
@@ -106,5 +111,6 @@ const ProjectCard = ({ title, des, img, iconLists, link }: Project) => {
         </div>
       </CardBody>
     </CardContainer>
+    </motion.div>
   );
 };
