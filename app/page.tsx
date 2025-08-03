@@ -3,6 +3,7 @@ import Image from "next/image";
 import About from "@/components/About";
 import Projects from "@/components/Projects";
 import TechStack from "@/components/TechStack";
+import Robot from "@/components/Robot";
 
 export default function Home() {
   return (
@@ -20,8 +21,8 @@ export default function Home() {
       <div className='h-auto  z-10'>
         <TechStack />
       </div>
-      <div id="robot" className="h-auto z-10">
-        {/* <robot /> */}
+      <div id="robot" className="h-screen z-10">
+        <Robot />
       </div>
     </main>
   );
