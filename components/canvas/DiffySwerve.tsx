@@ -1,9 +1,9 @@
 "use client";
 
-import { useRef, useMemo, forwardRef, useEffect } from "react";
+import { useRef, useMemo, forwardRef, useEffect, useState } from "react";
 import { useFrame } from "@react-three/fiber";
 import { useGLTF } from "@react-three/drei";
-import { Group, Vector3 } from "three";
+import { Group, Vector3, Object3D } from "three";
 
 interface RobotConfig {
   defaultPosition: number[];
@@ -12,9 +12,7 @@ interface RobotConfig {
 }
 
 interface Props {
-  /* React-Three can store this name so SideResetter can find the mesh */
   name?: string;
-
   focused: boolean;
   hovered: boolean;
   isLeft: boolean;
@@ -22,46 +20,63 @@ interface Props {
   hoverScale: number;
   focusScale: number;
   animationSpeed: number;
+  playing?: boolean; // ← start/stop wheel spin
 }
 
 const DiffySwerve = forwardRef<Group, Props>((props, ref) => {
   const {
     focused,
     hovered,
-    isLeft,
     config,
     hoverScale,
     focusScale,
     animationSpeed,
     name = "swerve",
+    playing = false,
   } = props;
 
+  /* ---------- load model ---------- */
   const group = useRef<Group>(null);
   const { scene } = useGLTF("/Robotics/diffy-swervy-compressed-new.glb");
 
-  const memoScene = useMemo(() => scene, [scene]);
+  /* ---------- locate wheels once ---------- */
+  const wheels = useRef<Object3D[]>([]);
+  // After: const { scene } = useGLTF("/Robotics/diffy-swervy-compressed-new.glb");
 
-  const delayDone = useRef(false);
+  const [partNames, setPartNames] = useState<string[]>([]);
+
   useEffect(() => {
-    if (focused) {
-      delayDone.current = false; // reset flag
-      const id = setTimeout(() => {
-        delayDone.current = true; // enable after 1 s
-      }, 1000);
-      return () => clearTimeout(id); // cleanup
-    } else {
-      delayDone.current = false; // reset when unfocused
-    }
-  }, [focused]);
+    if (!scene) return;
+    const names: string[] = [];
+    scene.traverse((o) => names.push(o.name));
+    setPartNames(names); // setState AFTER first paint
+  }, [scene]);
 
+  /* random rad/frame for each wheel (0.5–1.0 deg) */
+  const speeds = useMemo<number[]>(
+    () =>
+      Array.from(
+        { length: 8 },
+        () => (Math.random() * 0.5 + 0.5) * (Math.PI / 180)
+      ),
+    []
+  );
 
+  /* ---------- position / scale / rotations ---------- */
   const tgtPos = useRef(new Vector3());
   const tgtScale = useRef(config.defaultScale);
   useFrame(({ clock }) => {
     if (!group.current) return;
     const t = clock.elapsedTime;
 
-    /* choose target */
+    /* wheel spin while playing */
+    if (playing) {
+      wheels.current.forEach((w, i) => {
+        w.rotation.y += speeds[i % speeds.length];
+      });
+    }
+
+    /* focus / hover transforms */
     if (focused) {
       tgtPos.current.set(0, 0, 0);
       tgtScale.current = focusScale;
@@ -73,21 +88,20 @@ const DiffySwerve = forwardRef<Group, Props>((props, ref) => {
       tgtScale.current = config.defaultScale;
     }
 
-    /* lerp */
     group.current.position.lerp(tgtPos.current, animationSpeed);
     group.current.scale.lerp(
       new Vector3(tgtScale.current, tgtScale.current, tgtScale.current),
       animationSpeed
     );
 
-    /* rotation */
+    /* base rotation */
     if (focused) {
       group.current.rotation.y += 0.003;
     } else {
       group.current.rotation.set(...config.defaultRotation);
     }
 
-    /* idle hover wiggle */
+    /* idle wiggle */
     if (hovered && !focused) {
       group.current.position.y = Math.sin(t * 2) * 0.1;
     } else {
@@ -95,7 +109,7 @@ const DiffySwerve = forwardRef<Group, Props>((props, ref) => {
     }
   });
 
-  return <primitive ref={ref || group} object={memoScene} name={name} />;
+  return <primitive ref={ref || group} object={scene} name={name} />;
 });
 
 DiffySwerve.displayName = "DiffySwerve";

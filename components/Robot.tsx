@@ -109,6 +109,8 @@ export default function RobotShowcase() {
   const [focused, setFocused] = useState<"swerve" | "hydra" | null>(null);
   const [hovered, setHovered] = useState<"swerve" | "hydra" | null>(null);
   const width = useViewportWidth();
+  const [hydraPlaying, setHydraPlaying] = useState(false);
+  const [swervePlaying, setSwervePlaying] = useState(false);
   /* width % that belongs to LEFT panel (Swerve) */
   let leftPct = 50;
   if (hovered === "swerve") leftPct = 60;
@@ -119,15 +121,11 @@ export default function RobotShowcase() {
   const swerveCtrl = useRef<any>(null);
   const hydraCtrl = useRef<any>(null);
   // Estimate pixel width per world unit at z = 0
-  const pixelsPerWorldUnit = width / 10; // approximate, or get from useThree() if inside canvas
 
   // Find center of canvas in pixels
-  const centerScreen = width / 2;
   const canvasSwerve = (leftPct / 100) * width;
   const canvasHydra = ((100 - leftPct) / 100) * width;
-  const centerSwerve = canvasSwerve / 2;
-  const centerHydra = canvasHydra / 2 + canvasSwerve;
-
+  console.log(focused, hovered);
   return (
     <div className=" relative flex w-full h-screen overflow-hidden bg-slate-900">
       {/* LEFT / SWERVE */}
@@ -136,7 +134,10 @@ export default function RobotShowcase() {
         style={{ width: `${leftPct}%` }}
         onMouseEnter={() => setHovered("swerve")}
         onMouseLeave={() => setHovered(null)}
-        onClick={() => setFocused("swerve")}
+        onClick={() => {
+          setFocused("swerve");
+          setHydraPlaying(false);
+        }}
       >
         <Canvas
           resize={{ debounce: 0 }}
@@ -183,6 +184,7 @@ export default function RobotShowcase() {
               hoverScale={VIEW.hoverScale}
               focusScale={VIEW.focusScale}
               animationSpeed={VIEW.animationSpeed}
+              playing={swervePlaying}
             />
           </Suspense>
         </Canvas>
@@ -193,7 +195,10 @@ export default function RobotShowcase() {
         className="relative flex-1 border-l border-slate-600 ml-auto"
         onMouseEnter={() => setHovered("hydra")}
         onMouseLeave={() => setHovered(null)}
-        onClick={() => setFocused("hydra")}
+        onClick={() => {
+          setFocused("hydra");
+          setSwervePlaying(false);
+        }}
       >
         <Canvas
           resize={{ debounce: 0 }}
@@ -229,7 +234,11 @@ export default function RobotShowcase() {
               maxDistance={7}
             />
             <ambientLight intensity={2} />
-            <directionalLight position={[5, 7, 5]} intensity={2} />
+            <directionalLight position={[10, 10, 10]} intensity={1} />
+            <directionalLight position={[10, 10, -10]} intensity={1} />
+            <directionalLight position={[-10, 10, -10]} intensity={1} />
+            <directionalLight position={[-10, 10, 10]} intensity={1} />
+            <directionalLight position={[0, -5, 0]} intensity={1.5} />
 
             <Hydra
               name="hydra"
@@ -241,6 +250,7 @@ export default function RobotShowcase() {
               focusScale={VIEW.focusScale}
               animationSpeed={VIEW.animationSpeed}
               hydraDOMWidth={canvasHydra}
+              playing={hydraPlaying}
             />
           </Suspense>
         </Canvas>
@@ -252,10 +262,44 @@ export default function RobotShowcase() {
           onClick={() => {
             setFocused(null);
             setHovered(null);
+            setHydraPlaying(false);
+            setSwervePlaying(false);
           }}
-          className="absolute top-4 right-4 z-30 bg-slate-800 hover:bg-slate-700 text-white px-4 py-2 rounded-lg"
+          onMouseEnter={() => setHovered(focused)}
+          onMouseLeave={() => setHovered(null)}
+          className="absolute bottom-10 left-1/2 -translate-x-1/2 z-50 cursor-pointer bg-slate-800/80 hover:bg-slate-700/80 text-white px-4 py-2 rounded-lg font-semibold"
         >
           ← Back to Both
+        </button>
+      )}
+      {focused === "hydra" && (
+        <button
+          onClick={() => setHydraPlaying(!hydraPlaying)}
+          className={`absolute bottom-10 left-3/4 -translate-x-1/2 z-50
+      px-4 py-2 rounded-lg font-semibold transition text-white
+      ${
+        hydraPlaying
+          ? "bg-red-500 hover:bg-red-600" // “Stop” (red tones)
+          : "bg-red-300 hover:bg-red-400"
+      }
+      `}
+        >
+          {hydraPlaying ? "Stop Animation" : "Play Animation"}
+        </button>
+      )}
+      {focused === "swerve" && (
+        <button
+          onClick={() => setSwervePlaying(!swervePlaying)}
+          onMouseEnter={() => setHovered("swerve")}
+          onMouseLeave={() => setHovered(null)}
+          className={`absolute bottom-10 left-1/4 -translate-x-1/2 z-50 cursor-pointer text-white px-4 py-2 rounded-lg font-semibold ${
+            swervePlaying
+              ? "bg-blue-500 hover:bg-blue-600" // “Stop” (red tones)
+              : "bg-blue-300 hover:bg-blue-400"
+          }
+      `}
+        >
+          {swervePlaying ? "Stop Animation" : "Play Animation"}
         </button>
       )}
     </div>

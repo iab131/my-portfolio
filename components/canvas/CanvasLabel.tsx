@@ -82,7 +82,7 @@ export default function CanvasLabel({
       anchorX="center"
       anchorY="middle"
       fillOpacity={0.7}
-      depthWrite={false}
+      // depthWrite={false}
       characters="ABCDEFGHIJKLMNOPQRSTUVWXYZ 0123456789"
       lineHeight={1}
       whiteSpace="normal"
