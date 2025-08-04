@@ -1,54 +1,59 @@
 "use client";
 
-import {
-  useRef, useMemo, forwardRef, useEffect
-} from "react";
-import { useFrame, useThree }      from "@react-three/fiber";
-import { useGLTF, useAnimations }  from "@react-three/drei";
-import * as THREE                 from "three";
-import { Group, Vector3 }          from "three";
+import { useRef, useMemo, forwardRef, useEffect, useState } from "react";
+import { useFrame, useThree } from "@react-three/fiber";
+import { useGLTF, useAnimations } from "@react-three/drei";
+import { Group, Vector3 } from "three";
+import * as THREE from "three";
 
 interface RobotConfig {
   defaultPosition: number[];
-  defaultScale:   number;
-  defaultRotation:number[];
+  defaultScale: number;
+  defaultRotation: number[];
 }
+
 interface Props {
   name?: string;
-  focused:  boolean;
-  hovered:  boolean;
-  isLeft:   boolean;
-  config:   RobotConfig;
-  hoverScale:  number;
-  focusScale:  number;
-  animationSpeed:number;
-  hydraDOMWidth:number;
-  playing?: boolean; // external trigger
+  focused: boolean;
+  hovered: boolean;
+  isLeft: boolean;
+  config: RobotConfig;
+  hoverScale: number;
+  focusScale: number;
+  animationSpeed: number;
+  hydraDOMWidth: number;
+  playing?: boolean;
 }
 
-/* --------------------------------------------------------- */
-
-const Hydra = forwardRef<Group, Props>((p, ref) => {
+const Hydra = forwardRef<Group, Props>((props, ref) => {
   const {
-    focused, hovered, config,
-    animationSpeed, name = "hydra",
-    hydraDOMWidth, playing = false,
-  } = p;
+    focused,
+    hovered,
+    isLeft,
+    config,
+    hoverScale,
+    focusScale,
+    animationSpeed,
+    name = "hydra",
+    hydraDOMWidth,
+    playing = false,
+  } = props;
 
-  /* load model + clips */
-  const grp    = useRef<Group>(null);
+  const group = useRef<Group>(null);
   const { scene, animations } = useGLTF("/Robotics/hydra-compressed-new.glb");
-  const { actions, mixer }    = useAnimations(animations, grp);
-  const memoScene             = useMemo(() => scene, [scene]);
-
+  const { actions , mixer} = useAnimations(animations, group);
+  const memoScene = useMemo(() => scene, [scene]);
+  
   /* play-direction stored in a ref → no state flip */
   const dirRef = useRef<1 | -1>(1);   // 1 = fwd, -1 = rev
+  const tgtPos = useRef(new Vector3());
+  const tgtScale = useRef(config.defaultScale);
 
-  /* offset calc */
   const { viewport, size } = useThree();
-  const offsetWorld = ((size.width + 12) - hydraDOMWidth) / 2
-                    * (viewport.width / (size.width + 12));
-
+  const actualCanvaWidth = size.width + 12;
+  const worldPerPixel = viewport.width / actualCanvaWidth;
+  const offsetWorld = ((actualCanvaWidth - hydraDOMWidth) / 2) * worldPerPixel;
+  
   /* ----------- one-shot effect: (re)play when `playing` flips ----- */
   useEffect(() => {
     if (!actions || !playing) return;
@@ -87,48 +92,51 @@ const Hydra = forwardRef<Group, Props>((p, ref) => {
     };
   }, [playing, actions, mixer]);
 
-  /* ----------- per-frame transforms ------------- */
-  const tgtPos   = useRef(new Vector3());
-  const tgtScale = useRef(config.defaultScale);
-
   useFrame(({ clock }) => {
-    if (!grp.current) return;
+    if (!group.current) return;
     const t = clock.elapsedTime;
 
-    /* choose target */
     if (focused) {
-      tgtPos.current.set(-offsetWorld, -0.8, 0);
+      tgtPos.current.set(0, -0.8, 0);
       tgtScale.current = 6.5;
     } else if (hovered) {
-      tgtPos.current.set(0.4-offsetWorld, 0, 0);
+      tgtPos.current.set(0.4, 0, 0);
       tgtScale.current = 6;
     } else {
-      tgtPos.current.set(config.defaultPosition[0] - offsetWorld, config.defaultPosition[1], config.defaultPosition[2]);
-      tgtScale.current = config.defaultScale;
+      tgtPos.current.set(...config.defaultPosition);
+      tgtScale.current = 6;
     }
 
-    /* single-lerp is enough */
-    grp.current.position.lerp(tgtPos.current, animationSpeed);
-    grp.current.scale.lerp(
+    const pos = group.current.position;
+    pos.x = THREE.MathUtils.lerp(
+      pos.x,
+      -offsetWorld + tgtPos.current.x,
+      animationSpeed
+    );
+    pos.y = THREE.MathUtils.lerp(pos.y, tgtPos.current.y, animationSpeed);
+    pos.z = THREE.MathUtils.lerp(pos.z, tgtPos.current.z ?? 0, animationSpeed);
+
+    group.current.position.lerp(tgtPos.current, animationSpeed);
+    group.current.scale.lerp(
       new Vector3(tgtScale.current, tgtScale.current, tgtScale.current),
-      animationSpeed,
+      animationSpeed
     );
 
-    /* spin + wiggle */
-    if (focused) grp.current.rotation.y += 0.003;
-    else         grp.current.rotation.set(...config.defaultRotation);
+    if (focused) {
+      group.current.rotation.y += 0.003;
+    } else {
+      group.current.rotation.set(...config.defaultRotation);
+    }
 
-    grp.current.position.y =
-      hovered && !focused ? Math.sin(t * 2) * 0.1 : config.defaultPosition[1];
+    if (hovered && !focused) {
+      group.current.position.y = Math.sin(t * 2) * 0.1;
+    } else {
+      if (!focused) group.current.position.y = config.defaultPosition[1];
+    }
   });
 
-  /* ----------- render ------------- */
   return (
-    <group
-      ref={ref || grp}
-      position={[-offsetWorld / 1.4, 0, 0]}
-      name={name}
-    >
+    <group ref={ref || group} position={[-offsetWorld / 1.4, 0, 0]} name={name}>
       <primitive object={memoScene} />
     </group>
   );
