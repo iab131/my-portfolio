@@ -1,68 +1,263 @@
 // components/RobotShowcase.tsx
 "use client";
 
-import { useState } from "react";
-import { Canvas } from "@react-three/fiber";
+import { Suspense, useEffect, useState, useRef, RefObject } from "react";
+import { Canvas, useThree } from "@react-three/fiber";
 import { OrbitControls } from "@react-three/drei";
-import { Suspense } from "react";
+import * as THREE from "three";
+
 import CanvasLoader from "../components/Loader";
 import DiffySwerve from "./canvas/DiffySwerve";
 import Hydra from "./canvas/Hydra";
+import CanvasLabel from "./canvas/CanvasLabel";
+
+/* ───────── Config ───────── */
+
+type V3 = [number, number, number];
+interface RobotCfg {
+  defaultPosition: V3;
+  defaultScale: number;
+  defaultRotation: V3;
+  defaultCameraPosition: V3;
+  defaultCameraRotation: V3;
+}
+
+const ROBOT: Record<"swerve" | "hydra", RobotCfg> = {
+  swerve: {
+    defaultPosition: [-1.7, 0, 0],
+    defaultScale: 7,
+    defaultRotation: [0, 0.4, 0],
+    defaultCameraPosition: [0, 2, 4.5],
+    defaultCameraRotation: [0, 0, 0],
+  },
+  hydra: {
+    defaultPosition: [1.4, 0, 0],
+    defaultScale: 5,
+    defaultRotation: [0, 0.6, 0],
+    defaultCameraPosition: [0, 2, 6],
+    defaultCameraRotation: [0, 0, 0],
+  },
+};
+
+const VIEW = {
+  hoverScale: 7,
+  focusScale: 8,
+  animationSpeed: 0.05,
+};
+
+/* ───────── Reset helper ───────── */
+
+function ResetSide({
+  side,
+  focus,
+  hover,
+  ctrlRef,
+}: {
+  side: "swerve" | "hydra";
+  focus: "swerve" | "hydra" | null;
+  hover: "swerve" | "hydra" | null;
+  ctrlRef: RefObject<any>;
+}) {
+  const { camera, scene } = useThree();
+
+  useEffect(() => {
+    const cfg = ROBOT[side];
+    const idle = focus !== side && hover !== side;
+
+    if (idle) {
+      camera.position.set(...cfg.defaultCameraPosition);
+      camera.rotation.set(...cfg.defaultCameraRotation);
+
+      if (ctrlRef.current) {
+        ctrlRef.current.reset();
+        ctrlRef.current.enabled = false;
+      }
+
+      const robot = scene.getObjectByName(side);
+      if (robot) {
+        robot.position.set(...cfg.defaultPosition);
+        robot.rotation.set(...cfg.defaultRotation);
+        robot.scale.setScalar(cfg.defaultScale);
+      }
+    } else if (focus === side && ctrlRef.current) {
+      ctrlRef.current.enabled = true;
+    }
+  }, [focus, hover, side, camera, scene, ctrlRef]);
+
+  return null;
+}
+
+function useViewportWidth() {
+  const [width, setWidth] = useState(0);
+
+  useEffect(() => {
+    const handleResize = () => setWidth(window.innerWidth);
+
+    // Set initial width (client only)
+    handleResize();
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  return width;
+}
+
+/* ───────── Showcase ───────── */
 
 export default function RobotShowcase() {
-  const [focused, setFocused] = useState<"swerve" | "hydra" | null>("swerve");
+  const [focused, setFocused] = useState<"swerve" | "hydra" | null>(null);
+  const [hovered, setHovered] = useState<"swerve" | "hydra" | null>(null);
+  const width = useViewportWidth();
+  /* width % that belongs to LEFT panel (Swerve) */
+  let leftPct = 50;
+  if (hovered === "swerve") leftPct = 60;
+  if (hovered === "hydra") leftPct = 40;
+  if (focused === "swerve") leftPct = 70;
+  if (focused === "hydra") leftPct = 30;
+
+  const swerveCtrl = useRef<any>(null);
+  const hydraCtrl = useRef<any>(null);
+  // Estimate pixel width per world unit at z = 0
+  const pixelsPerWorldUnit = width / 10; // approximate, or get from useThree() if inside canvas
+
+  // Find center of canvas in pixels
+  const centerScreen = width / 2;
+  const canvasSwerve = (leftPct / 100) * width;
+  const canvasHydra = ((100 - leftPct) / 100) * width;
+  const centerSwerve = canvasSwerve / 2;
+  const centerHydra = canvasHydra / 2 + canvasSwerve;
 
   return (
-    <div className="relative w-screen h-screen bg-slate-900 flex">
-      {/* Left Hover Area */}
+    <div className=" relative flex w-full h-screen overflow-hidden bg-slate-900">
+      {/* LEFT / SWERVE */}
       <div
-        className={`transition-all duration-500 h-full cursor-pointer z-10 ${
-          focused === "swerve"
-            ? "w-full"
-            : focused === "hydra"
-            ? "w-1/6"
-            : "w-1/4 hover:w-1/2"
-        }`}
+        className="relative shrink-0 transition-[width] duration-300 border-r border-slate-600"
+        style={{ width: `${leftPct}%` }}
+        onMouseEnter={() => setHovered("swerve")}
+        onMouseLeave={() => setHovered(null)}
         onClick={() => setFocused("swerve")}
       >
-        <Canvas camera={{ position: [0, 0, 5], fov: 50 }}>
+        <Canvas
+          resize={{ debounce: 0 }}
+          camera={{ position: ROBOT.swerve.defaultCameraPosition, fov: 50 }}
+          className="w-full h-full"
+        >
           <Suspense fallback={<CanvasLoader />}>
-            <OrbitControls enableZoom={true} enablePan={true} />
-            <ambientLight intensity={1.0} />
-            <directionalLight position={[10, 10, 5]} intensity={1.5} />
-            <directionalLight position={[-10, -10, -5]} intensity={0.8} />
-            <directionalLight position={[0, 10, 0]} intensity={1.2} />
-            <pointLight position={[5, 5, 5]} intensity={0.8} />
-            <pointLight position={[-5, -5, -5]} intensity={0.6} />
-            <DiffySwerve focused={focused === "swerve"} />
+            <CanvasLabel
+              text={"Diffy\nSwerve"}
+              hex={
+                focused === "swerve" ? "#60a5fa" : "#7dd3fc"
+              } /* brighter on focus */
+              active={focused === "swerve"}
+              hydraDOMWidth={canvasSwerve}
+            />
+            <ResetSide
+              side="swerve"
+              focus={focused}
+              hover={hovered}
+              ctrlRef={swerveCtrl}
+            />
+            <OrbitControls
+              ref={swerveCtrl}
+              enableRotate={focused === "swerve"}
+              enableZoom={focused === "swerve"}
+              enablePan={false}
+              enableDamping
+              dampingFactor={0.05}
+              minDistance={2}
+              maxDistance={7}
+            />
+            <ambientLight intensity={1} />
+            <directionalLight position={[10, 10, 10]} intensity={1.5} />
+            <directionalLight position={[10, 10, -10]} intensity={1.5} />
+            <directionalLight position={[-10, 10, -10]} intensity={1.5} />
+            <directionalLight position={[-10, 10, 10]} intensity={1.5} />
+            <directionalLight position={[0, -5, 0]} intensity={1.5} />
+            <DiffySwerve
+              name="swerve"
+              focused={focused === "swerve"}
+              hovered={hovered === "swerve"}
+              isLeft
+              config={ROBOT.swerve}
+              hoverScale={VIEW.hoverScale}
+              focusScale={VIEW.focusScale}
+              animationSpeed={VIEW.animationSpeed}
+            />
           </Suspense>
         </Canvas>
       </div>
 
-      {/* Right Hover Area */}
+      {/* RIGHT / HYDRA */}
       <div
-        className={`transition-all duration-500 h-full cursor-pointer z-10 ${
-          focused === "hydra"
-            ? "w-full"
-            : focused === "swerve"
-            ? "w-1/6"
-            : "w-1/4 hover:w-1/2"
-        }`}
+        className="relative flex-1 border-l border-slate-600 ml-auto"
+        onMouseEnter={() => setHovered("hydra")}
+        onMouseLeave={() => setHovered(null)}
         onClick={() => setFocused("hydra")}
       >
-        <Canvas camera={{ position: [0, 0, 5], fov: 50 }}>
+        <Canvas
+          resize={{ debounce: 0 }}
+          camera={{ position: ROBOT.hydra.defaultCameraPosition, fov: 50 }}
+          className="w-full h-full"
+        >
           <Suspense fallback={<CanvasLoader />}>
-            <OrbitControls enableZoom={true} enablePan={true} />
-            <ambientLight intensity={1.0} />
-            <directionalLight position={[10, 10, 5]} intensity={1.5} />
-            <directionalLight position={[-10, -10, -5]} intensity={0.8} />
-            <directionalLight position={[0, 10, 0]} intensity={1.2} />
-            <pointLight position={[5, 5, 5]} intensity={0.8} />
-            <pointLight position={[-5, -5, -5]} intensity={0.6} />
-            <Hydra focused={focused === "hydra"} />
+            <CanvasLabel
+              text="H y d r a"
+              hex={
+                focused === "hydra" ? "#f87171" : "#fca5a5"
+              } /* brighter on focus */
+              active={focused === "hydra"}
+              hover={hovered}
+              current={focused}
+              hydraDOMWidth={canvasHydra}
+              swerveCanvaWidth={canvasSwerve} // pass xOffset for
+            />
+            <ResetSide
+              side="hydra"
+              focus={focused}
+              hover={hovered}
+              ctrlRef={hydraCtrl}
+            />
+            <OrbitControls
+              ref={hydraCtrl}
+              enableRotate={focused === "hydra"}
+              enableZoom={focused === "hydra"}
+              enablePan={false}
+              enableDamping
+              dampingFactor={0.05}
+              minDistance={2}
+              maxDistance={7}
+            />
+            <ambientLight intensity={2} />
+            <directionalLight position={[5, 7, 5]} intensity={2} />
+
+            <Hydra
+              name="hydra"
+              focused={focused === "hydra"}
+              hovered={hovered === "hydra"}
+              isLeft={false}
+              config={ROBOT.hydra}
+              hoverScale={VIEW.hoverScale}
+              focusScale={VIEW.focusScale}
+              animationSpeed={VIEW.animationSpeed}
+              hydraDOMWidth={canvasHydra}
+            />
           </Suspense>
         </Canvas>
       </div>
+
+      {/* RESET BUTTON */}
+      {focused && (
+        <button
+          onClick={() => {
+            setFocused(null);
+            setHovered(null);
+          }}
+          className="absolute top-4 right-4 z-30 bg-slate-800 hover:bg-slate-700 text-white px-4 py-2 rounded-lg"
+        >
+          ← Back to Both
+        </button>
+      )}
     </div>
   );
 }

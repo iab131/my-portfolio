@@ -9,7 +9,7 @@ import { EvervaultCard, Icon } from "./ui/evervault-card";
 import { CometCard } from "@/components/ui/comet-card";
 const About = () => {
   return (
-    <div className="px-4 sm:px-10 mt-10">
+    <div className="px-4 sm:px-10 mt-20">
       <div className="flex flex-col justify-center items-start mt-10 max-w-8xl">
         <div>
           <motion.div

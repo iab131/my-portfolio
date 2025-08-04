@@ -18,12 +18,14 @@ export default function Home() {
       <div id="projects" className=' h-auto  z-10'>
         <Projects />
       </div>
-      <div className='h-auto  z-10'>
+      <div className='h-auto  z-10 mb-40'>
         <TechStack />
       </div>
-      <div id="robot" className="h-screen z-10">
+      <div id="robot" className="w-full h-auto z-10">
         <Robot />
       </div>
+
+      <div className="h-screen"/>
     </main>
   );
 }
