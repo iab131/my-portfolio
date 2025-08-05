@@ -184,3 +184,17 @@ export const projects: Project[] = [
     link: "https://github.com/",
   },
 ];
+
+export const socialMedia = [
+  {
+    id: 1,
+    img: "/img/git.svg",
+    link: "https://github.com/iab131"
+  },
+
+  {
+    id: 2,
+    img: "/img/link.svg",
+    link: "https://www.linkedin.com/in/enhe-bai-64b068313/"
+  },
+];

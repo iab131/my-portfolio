@@ -275,6 +275,8 @@ export default function RobotShowcase() {
       {focused === "hydra" && (
         <button
           onClick={() => setHydraPlaying(!hydraPlaying)}
+          onMouseEnter={() => setHovered("hydra")}
+          onMouseLeave={() => setHovered(null)}
           className={`absolute bottom-10 left-3/4 -translate-x-1/2 z-50
       px-4 py-2 rounded-lg font-semibold transition text-white
       ${
