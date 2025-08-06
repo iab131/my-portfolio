@@ -1,21 +1,20 @@
 "use client";
 
 import React, { useState, useEffect, MouseEvent } from "react";
-import { useMotionValue, useMotionTemplate, motion } from "motion/react";
+import { useMotionValue, useMotionTemplate, motion } from "framer-motion"; // fix: correct framer-motion import
 import Image, { StaticImageData } from "next/image";
 import { cn } from "@/lib/utils";
 import { web } from "@/src/assets";
 
-export const EvervaultCard = ({
-  text,
-  className,
-}: {
+interface EvervaultCardProps {
   text?: string | StaticImageData;
   className?: string;
-}) => {
+}
+
+export const EvervaultCard = ({ text, className }: EvervaultCardProps) => {
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
-  const [randomString, setRandomString] = useState("");
+  const [randomString, setRandomString] = useState<string>("");
 
   useEffect(() => {
     const str = generateRandomString(1500);
@@ -48,6 +47,7 @@ export const EvervaultCard = ({
           mouseY={mouseY}
           randomString={randomString}
         />
+
         <div className="relative z-10 flex items-center justify-center">
           <div className="relative w-30 h-30 rounded-full flex items-center justify-center text-white font-bold text-4xl">
             <div className="absolute w-full h-full bg-gradient-to-br from-cyan-500/50 to-blue-600/50 blur-sm rounded-full" />

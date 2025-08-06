@@ -14,7 +14,7 @@ const Footer = () => {
           {/* Heading + button */}
           <div className="max-w-6xl mx-auto px-6 text-center space-y-8">
             <h2 className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-bold leading-tight bg-gradient-to-b from-slate-100 to-slate-500 bg-clip-text text-transparent">
-              Have a wild project you can't stop thinking about?
+              Have a wild project you can&apos;t stop thinking about?
             </h2>
 
             <a

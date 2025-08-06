@@ -33,14 +33,14 @@ const About = () => {
             viewport={{ once: false, amount: 0.25 }}
             className="mt-4 text-secondary text-[17px] max-w-3xl leading-[30px]"
           >
-            I'm a Computer Science student at the University of Waterloo with a
+            I&apos;m a Computer Science student at the University of Waterloo with a
             passion for robotics, simulation, and creative technology. I design
             hands-on tools that blend code with real-world logic — from a
             LEGO-style robot simulator used for FLL training, to mini-games and
             3D-printed mechanical models shared with thousands.
             <br />
             My work brings together engineering, design, and interactivity —
-            whether it's simulating robot physics, designing CAD mechanisms, or
+            whether it&apos;s simulating robot physics, designing CAD mechanisms, or
             developing game prototypes. I aim to make technology feel tangible,
             intuitive, and fun.
           </motion.p>
