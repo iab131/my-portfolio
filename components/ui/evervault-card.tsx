@@ -1,7 +1,12 @@
 "use client";
 
 import React, { useState, useEffect, MouseEvent } from "react";
-import { useMotionValue, useMotionTemplate, motion } from "framer-motion"; // fix: correct framer-motion import
+import {
+  useMotionValue,
+  useMotionTemplate,
+  motion,
+  MotionValue,
+} from "framer-motion"; // fix: correct framer-motion import
 import Image, { StaticImageData } from "next/image";
 import { cn } from "@/lib/utils";
 import { web } from "@/src/assets";
@@ -68,8 +73,9 @@ export const EvervaultCard = ({ text, className }: EvervaultCardProps) => {
 };
 
 interface CardPatternProps {
-  mouseX: ReturnType<typeof useMotionValue>;
-  mouseY: ReturnType<typeof useMotionValue>;
+  mouseX: MotionValue<number>;
+  mouseY: MotionValue<number>;
+
   randomString: string;
 }
 
