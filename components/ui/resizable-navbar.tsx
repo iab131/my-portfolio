@@ -244,7 +244,7 @@ export const NavbarLogo = () => {
         className="rounded-lg"
       />
       <span className="font-medium text-black dark:text-white">
-        Enhe's Portfolio
+        Enhe&apos;s Portfolio
       </span>
     </a>
   );

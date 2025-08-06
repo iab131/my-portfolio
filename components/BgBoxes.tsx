@@ -17,7 +17,7 @@ export function BgBoxes() {
         <div className="bg-white/5 backdrop-blur-sm rounded-xl p-8 shadow-xl mx-4 sm:mx-10">
           <TextGenerateEffect
             className="text-5xl md:text-6xl lg:text-7xl font-extrabold mb-4 -mt-8 drop-shadow-lg"
-            words="Hi, I’m Enhe 👋"
+            words="Hi, I&apos;m Enhe 👋"
           />
           <motion.h2
             className="text-xl md:text-2xl text-gray-200 mb-4 font-medium leading-snug"

@@ -4,8 +4,7 @@
 import { Suspense, useEffect, useState, useRef, RefObject } from "react";
 import { Canvas, useThree } from "@react-three/fiber";
 import { OrbitControls } from "@react-three/drei";
-import * as THREE from "three";
-
+import type { OrbitControls as OrbitControlsImpl } from "three-stdlib";
 import CanvasLoader from "../components/Loader";
 import DiffySwerve from "./canvas/DiffySwerve";
 import Hydra from "./canvas/Hydra";
@@ -56,7 +55,7 @@ function ResetSide({
   side: "swerve" | "hydra";
   focus: "swerve" | "hydra" | null;
   hover: "swerve" | "hydra" | null;
-  ctrlRef: RefObject<any>;
+  ctrlRef: RefObject<OrbitControlsImpl | null>;
 }) {
   const { camera, scene } = useThree();
 
@@ -118,8 +117,9 @@ export default function RobotShowcase() {
   if (focused === "swerve") leftPct = 70;
   if (focused === "hydra") leftPct = 30;
 
-  const swerveCtrl = useRef<any>(null);
-  const hydraCtrl = useRef<any>(null);
+  const swerveCtrl = useRef<OrbitControlsImpl | null>(null);
+  const hydraCtrl = useRef<OrbitControlsImpl | null>(null);
+
   // Estimate pixel width per world unit at z = 0
 
   // Find center of canvas in pixels

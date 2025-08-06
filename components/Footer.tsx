@@ -22,7 +22,7 @@ const Footer = () => {
               className="inline-flex rounded-4xl bg-gradient-to-r from-emerald-400 to-cyan-500 p-[4px] transition-transform hover:scale-105 group"
             >
               <span className="px-8 py-3 bg-slate-900 rounded-3xl transition-colors group-hover:bg-transparent font-semibold text-slate-50">
-                Let’s get in touch
+                Let&apos;s get in touch
               </span>
             </a>
             <span className="text-sm sm:text-md text-slate-400 mt-2 block">
