@@ -249,26 +249,24 @@ export const NavbarLogo = () => {
     </a>
   );
 };
+type NavbarButtonProps<T extends React.ElementType> = {
+  as?: T;
+  variant?: "primary" | "secondary" | "dark" | "gradient";
+  className?: string;
+  children: React.ReactNode;
+} & Omit<React.ComponentPropsWithoutRef<T>, "as" | "className" | "children">;
 
-export const NavbarButton = ({
-  href,
-  as: Tag = "a",
+export const NavbarButton = <T extends React.ElementType = "a">({
+  as,
   children,
   className,
   variant = "primary",
   ...props
-}: {
-  href?: string;
-  as?: React.ElementType;
-  children: React.ReactNode;
-  className?: string;
-  variant?: "primary" | "secondary" | "dark" | "gradient";
-} & (
-  | React.ComponentPropsWithoutRef<"a">
-  | React.ComponentPropsWithoutRef<"button">
-)) => {
+}: NavbarButtonProps<T>) => {
+  const Component = as || "a";
+
   const baseStyles =
-    "px-4 py-2 rounded-md bg-white button bg-white text-black text-sm font-bold relative cursor-pointer hover:-translate-y-0.5 transition duration-200 inline-block text-center";
+    "px-4 py-2 rounded-md bg-white text-black text-sm font-bold relative cursor-pointer hover:-translate-y-0.5 transition duration-200 inline-block text-center";
 
   const variantStyles = {
     primary:
@@ -280,12 +278,11 @@ export const NavbarButton = ({
   };
 
   return (
-    <Tag
-      href={href || undefined}
+    <Component
       className={cn(baseStyles, variantStyles[variant], className)}
-      {...props}
+      {...(props as any)}
     >
       {children}
-    </Tag>
+    </Component>
   );
 };
