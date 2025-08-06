@@ -1,8 +1,6 @@
 import React from "react";
 import { socialMedia } from "@/lib/constants";
 import { BackgroundBeams } from "./ui/background-beams";
-import { motion } from "framer-motion";
-import { fadeIn, slideIn, textVariant, zoomIn } from "@/lib/motion";
 const Footer = () => {
   return (
     <footer className="w-full text-white">
@@ -28,7 +26,7 @@ const Footer = () => {
             <span className="text-sm sm:text-md text-slate-400 mt-2 block">
               Or email me manually at{" "}
               <span className="underline font-semibold">
-                enhe.bai@uwaterloo.ca
+                e8bai@uwaterloo.ca
               </span>
             </span>
           </div>

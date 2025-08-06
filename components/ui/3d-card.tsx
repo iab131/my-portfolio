@@ -91,6 +91,9 @@ export const CardBody = ({
     </div>
   );
 };
+
+
+
 type CardItemProps<T extends React.ElementType> = {
   as?: T;
   children: React.ReactNode;
@@ -101,7 +104,7 @@ type CardItemProps<T extends React.ElementType> = {
   rotateX?: number | string;
   rotateY?: number | string;
   rotateZ?: number | string;
-} & Omit<React.ComponentPropsWithoutRef<T>, "as">;
+} & Omit<React.ComponentPropsWithoutRef<T>, "as" | "ref">; // 🟢 1. drop `ref`
 
 export const CardItem = <T extends React.ElementType = "div">({
   as,
@@ -116,25 +119,20 @@ export const CardItem = <T extends React.ElementType = "div">({
   ...rest
 }: CardItemProps<T>) => {
   const Tag = as || "div";
-  const ref = useRef<HTMLElement>(null);
+  const innerRef = React.useRef<HTMLElement>(null);
   const [isMouseEntered] = useMouseEnter();
 
-  useEffect(() => {
-    handleAnimations();
+  React.useEffect(() => {
+    if (!innerRef.current) return;
+    innerRef.current.style.transform = isMouseEntered
+      ? `translateX(${translateX}px) translateY(${translateY}px) translateZ(${translateZ}px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) rotateZ(${rotateZ}deg)`
+      : `translateX(0) translateY(0) translateZ(0) rotateX(0) rotateY(0) rotateZ(0)`;
   }, [isMouseEntered]);
-
-  const handleAnimations = () => {
-    if (!ref.current) return;
-    if (isMouseEntered) {
-      ref.current.style.transform = `translateX(${translateX}px) translateY(${translateY}px) translateZ(${translateZ}px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) rotateZ(${rotateZ}deg)`;
-    } else {
-      ref.current.style.transform = `translateX(0px) translateY(0px) translateZ(0px) rotateX(0deg) rotateY(0deg) rotateZ(0deg)`;
-    }
-  };
 
   return (
     <Tag
-      ref={ref}
+      /* 🟢 2. only pass the ref when Tag is a string element */
+      {...(typeof Tag === "string" ? { ref: innerRef } : {})}
       className={cn("w-fit transition duration-200 ease-linear", className)}
       {...rest}
     >
@@ -142,7 +140,6 @@ export const CardItem = <T extends React.ElementType = "div">({
     </Tag>
   );
 };
-
 // Create a hook to use the context
 export const useMouseEnter = () => {
   const context = useContext(MouseEnterContext);
