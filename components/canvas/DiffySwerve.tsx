@@ -1,14 +1,14 @@
 "use client";
 
-import { useRef, useMemo, forwardRef, useEffect, useState } from "react";
+import { useRef, useMemo, forwardRef, useEffect, } from "react";
 import { useFrame } from "@react-three/fiber";
 import { useGLTF } from "@react-three/drei";
 import { Group, Vector3, Object3D } from "three";
 
 interface RobotConfig {
-  defaultPosition: number[];
+  defaultPosition: [number, number, number];
   defaultScale: number;
-  defaultRotation: number[];
+  defaultRotation: [number, number, number];
 }
 
 interface Props {
@@ -43,13 +43,10 @@ const DiffySwerve = forwardRef<Group, Props>((props, ref) => {
   const wheels = useRef<Object3D[]>([]);
   // After: const { scene } = useGLTF("/Robotics/diffy-swervy-compressed-new.glb");
 
-  const [partNames, setPartNames] = useState<string[]>([]);
-
   useEffect(() => {
     if (!scene) return;
     const names: string[] = [];
     scene.traverse((o) => names.push(o.name));
-    setPartNames(names); // setState AFTER first paint
   }, [scene]);
 
   /* random rad/frame for each wheel (0.5–1.0 deg) */

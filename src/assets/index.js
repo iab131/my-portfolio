@@ -30,6 +30,15 @@ import carrent from "./carrent.png";
 import jobit from "./jobit.png";
 import tripguide from "./tripguide.png";
 
+import unity from "./tech/unity.svg";
+import csharp from "./tech/csharp.svg";
+import blender from "./tech/blender.svg";
+import ar from "./tech/ar.svg";
+import onshape from "./tech/onshape.png";
+import java from "./tech/java.svg";
+import ai from "./tech/ai.svg";
+import orca from "./tech/orca.jpeg";
+
 export {
   logo,
   backend,
@@ -59,4 +68,12 @@ export {
   carrent,
   jobit,
   tripguide,
+  unity,
+  csharp,
+  blender,
+  ar,
+  onshape,
+  java,
+  ai,
+  orca,
 };

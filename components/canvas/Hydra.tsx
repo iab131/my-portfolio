@@ -7,9 +7,9 @@ import { Group, Vector3 } from "three";
 import * as THREE from "three";
 
 interface RobotConfig {
-  defaultPosition: number[];
+  defaultPosition: [number, number, number];
   defaultScale: number;
-  defaultRotation: number[];
+  defaultRotation: [number, number, number];
 }
 
 interface Props {

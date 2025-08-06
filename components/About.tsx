@@ -34,15 +34,15 @@ const About = () => {
             className="mt-4 text-secondary text-[17px] max-w-3xl leading-[30px]"
           >
             I'm a Computer Science student at the University of Waterloo with a
-            passion for robotics, 3D simulation, and interactive systems. I
-            specialize in building immersive, hands-on learning tools that blend
-            code with physical logic — from LEGO-style robot simulators to
-            real-time block-based programming environments. Whether I'm
-            designing intuitive UIs, coding motion logic, or simulating hardware
-            behaviors, I strive to make technology feel both powerful and
-            accessible. My work combines technical depth with creative design,
-            always aiming to bridge the gap between imagination and
-            implementation.
+            passion for robotics, simulation, and creative technology. I design
+            hands-on tools that blend code with real-world logic — from a
+            LEGO-style robot simulator used for FLL training, to mini-games and
+            3D-printed mechanical models shared with thousands.
+            <br />
+            My work brings together engineering, design, and interactivity —
+            whether it's simulating robot physics, designing CAD mechanisms, or
+            developing game prototypes. I aim to make technology feel tangible,
+            intuitive, and fun.
           </motion.p>
         </div>
       </div>
@@ -85,7 +85,9 @@ const TiltCard = ({ title, index, icon }: TiltCardProps) => {
             </div>
           </div>
           <div className="mt-2 flex flex-shrink-0 items-center justify-center p-2 font-mono text-white">
-            <div className="text-lg text-center text-white font-bold">{title}</div>
+            <div className="text-lg text-center text-white font-bold">
+              {title}
+            </div>
             {/* <div className="text-xs text-gray-300 opacity-50">#F7RA</div> */}
           </div>
         </div>

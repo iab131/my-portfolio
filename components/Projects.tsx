@@ -53,7 +53,7 @@ const ProjectCard = ({ title, des, img, iconLists, link }: Project) => {
       initial="hidden"
       whileInView="show">
     <CardContainer className="inter-var ">
-      <CardBody className="relative group/card hover:shadow-2xl hover:shadow-emerald-500/[0.1] bg-gray-800 border-white/[0.2]  w-full md:w-[40rem] sm:w-[30rem] h-auto rounded-xl p-6 border  ">
+      <CardBody className="relative group/card hover:shadow-2xl hover:shadow-emerald-500/[0.1] bg-gray-800 border-white/[0.2]  w-full md:w-[40rem] sm:w-[30rem] h-auto rounded-4xl p-6 border  ">
         <CardItem
           translateZ="50"
           className="lg:text-3xl md:text-2xl text-xl line-clamp-1 font-bold text-white pointer-events-none"
@@ -63,17 +63,17 @@ const ProjectCard = ({ title, des, img, iconLists, link }: Project) => {
         <CardItem
           as="p"
           translateZ="60"
-          className="text-base max-w-sm mt-2 text-neutral-300 pointer-events-none"
+          className="text-base max-w-md mt-4 text-neutral-300 pointer-events-none"
         >
           {des}
         </CardItem>
-        <CardItem translateZ="100" className="w-full mt-4">
+        <CardItem translateZ="100" className="w-full mt-6">
           <div className="relative flex items-center justify-center w-full sm:h-[40vh] h-[30vh]">
             <div
               className="relative w-full h-full overflow-hidden rounded-xl lg:rounded-3xl bg-gray-700/50 border border-white/[0.2] flex items-center justify-center"
             >
               <img src="/img/bg.png" alt="bgimg" className="absolute inset-0 w-full h-full object-cover" />
-              <Image
+              <img
                 src={img}
                 className="relative top-10 z-10 w-auto h-auto max-w-[90%] max-h-[90%] object-contain rounded-2xl shadow-lg transform rotate-4"
                 alt="cover"
@@ -82,12 +82,12 @@ const ProjectCard = ({ title, des, img, iconLists, link }: Project) => {
           </div>
         </CardItem>
         <div className="flex justify-between items-center mt-6">
-          <CardItem translateZ={50} as="div" className="py-2">
+          <CardItem translateZ={50} as="div" className="py-1">
             <div className="flex items-center">
               {iconLists.map((icon, index) => (
                 <div
                   key={icon}
-                  className="border border-gray-600 rounded-full bg-gray-800 lg:w-10 lg:h-10 w-8 h-8 flex justify-center items-center"
+                  className="border border-gray-600 rounded-full bg-gray-800 lg:w-12 lg:h-12 w-10 h-10 flex justify-center items-center"
                   style={{ transform: `translateX(-${5 * index * 2}px)` }}
                 >
                   <img src={icon} alt={icon} className="p-2" />

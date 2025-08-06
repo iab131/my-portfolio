@@ -77,7 +77,7 @@ export default function CanvasLabel({
       ref={mesh}
       position={[x, active ? BEHIND : ABOVE, active ? -3 : z]}
       rotation={[-Math.PI / 9, 0, 0]}
-      fontSize={active ? fontSize : fontSize }
+      fontSize={active ? fontSize : fontSize * 0.9}
       color={hex}
       anchorX="center"
       anchorY="middle"
