@@ -92,8 +92,6 @@ export const CardBody = ({
   );
 };
 
-
-
 type CardItemProps<T extends React.ElementType> = {
   as?: T;
   children: React.ReactNode;
@@ -131,10 +129,9 @@ export const CardItem = <T extends React.ElementType = "div">({
 
   return (
     <Tag
-      /* 🟢 2. only pass the ref when Tag is a string element */
       {...(typeof Tag === "string" ? { ref: innerRef } : {})}
       className={cn("w-fit transition duration-200 ease-linear", className)}
-      {...rest}
+      {...(rest as any)} // 👈 Safe fallback if you're confident in the props
     >
       {children}
     </Tag>
