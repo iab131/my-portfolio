@@ -101,7 +101,7 @@ const ProjectCard = ({ title, des, img, iconLists, link }: Project) => {
             target="_blank"
             href={link}
             rel="noopener noreferrer"
-            className="flex lg:text-[15px] md:text-xs text-sm px-4 py-2 rounded-xl bg-gray-700/50 hover:bg-gray-600/50 text-white font-bold border-white/[0.2] border"
+            className="flex lg:text-[15px] md:text-xs text-sm px-4 py-3 rounded-xl bg-gray-700/50 hover:bg-gray-600/50 text-white font-bold border-white/[0.2] border"
           >
             <div className="flex justify-center items-center">
               Check Live Site

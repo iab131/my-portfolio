@@ -24,7 +24,7 @@ export function Navbar() {
     },
     {
       name: "Robots",
-      link: "#robot",
+      link: "/robot",
     },
   ];
 

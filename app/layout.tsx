@@ -1,3 +1,4 @@
+// app/layout.tsx or app/layout.js
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
@@ -16,6 +17,9 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Enhe's Portfolio",
   description: "A showcase of my work and skills",
+  icons: {
+    icon: "/img/favicon.png",
+  },
 };
 
 export default function RootLayout({

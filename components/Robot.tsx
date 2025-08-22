@@ -9,6 +9,7 @@ import CanvasLoader from "../components/Loader";
 import DiffySwerve from "./canvas/DiffySwerve";
 import Hydra from "./canvas/Hydra";
 import CanvasLabel from "./canvas/CanvasLabel";
+import Link from "next/link";
 
 /* ───────── Config ───────── */
 
@@ -128,6 +129,24 @@ export default function RobotShowcase() {
   console.log(focused, hovered);
   return (
     <div className=" relative flex w-full h-screen overflow-hidden bg-slate-900">
+      {/* BACK TO PORTFOLIO BUTTON */}
+      <Link
+        href="/"
+        className="
+    absolute top-4 left-4 lg:top-6 lg:left-6
+    z-50
+    bg-slate-800/80 hover:bg-slate-700/80
+    text-white
+
+    
+    px-4 py-2 text-base
+    lg:px-5 lg:py-2.5 lg:text-lg
+    rounded-lg font-semibold shadow
+  "
+      >
+        ← Back to Portfolio
+      </Link>
+
       {/* LEFT / SWERVE */}
       <div
         className="relative shrink-0 transition-[width] duration-300 border-r border-slate-600"
