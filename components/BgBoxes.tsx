@@ -14,7 +14,7 @@ export function BgBoxes() {
       <Boxes />
 
       <div className="z-10  max-w-4xl pointer-events-none flex flex-col  relative">
-        <div className="bg-white/5 backdrop-blur-sm rounded-xl p-8 shadow-xl mx-4 sm:mx-10">
+        <div className="bg-white/5 backdrop-blur-sm rounded-2xl md:rounded-4xl p-8 shadow-xl mx-4 sm:mx-10">
           <TextGenerateEffect
             className="text-5xl md:text-6xl lg:text-7xl font-extrabold mb-4 -mt-8 drop-shadow-lg"
             words="Hi, I&apos;m Enhe 👋"

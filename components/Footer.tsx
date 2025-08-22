@@ -1,6 +1,8 @@
 import React from "react";
 import { socialMedia } from "@/lib/constants";
 import { BackgroundBeams } from "./ui/background-beams";
+import Link from "next/link";
+
 const Footer = () => {
   return (
     <footer className="w-full text-white">
@@ -17,10 +19,26 @@ const Footer = () => {
 
             <a
               href="mailto:e8bai@uwaterloo.ca"
-              className="inline-flex rounded-4xl bg-gradient-to-r from-emerald-400 to-cyan-500 p-[4px] transition-transform hover:scale-105 group"
+              className="inline-flex   transition-transform hover:scale-105 group"
             >
-              <span className="px-8 py-3 bg-slate-900 rounded-3xl transition-colors group-hover:bg-transparent font-semibold text-slate-50">
-                Let&apos;s get in touch
+              <span
+                className="
+    group relative inline-block rounded-3xl
+    bg-slate-800/80 backdrop-blur-md
+    ring-1 ring-white/10
+    px-8 py-3
+    shadow-md shadow-blue-500/20
+    hover:shadow-[0_0_40px_rgba(59,130,246,0.45)]
+    transition-all duration-300
+    text-center
+  "
+              >
+                {/* glow border */}
+                <span className="pointer-events-none absolute inset-0 -z-10 rounded-3xl bg-gradient-to-r from-blue-500/40 to-cyan-400/40 blur-xl opacity-70 group-hover:opacity-100 transition-opacity"></span>
+
+                <span className="font-semibold text-slate-50 text-lg">
+                  Let&apos;s get in touch
+                </span>
               </span>
             </a>
             <span className="text-sm sm:text-md text-slate-400 mt-2 block">

@@ -31,7 +31,7 @@ const ROBOT: Record<"swerve" | "hydra", RobotCfg> = {
     defaultCameraRotation: [0, 0, 0],
   },
   hydra: {
-    defaultPosition: [1.4, 0, 0],
+    defaultPosition: [1.4, -0.6, 0],
     defaultScale: 5,
     defaultRotation: [0, 0.6, 0],
     defaultCameraPosition: [0, 2, 6],

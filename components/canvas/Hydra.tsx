@@ -129,7 +129,7 @@ const Hydra = forwardRef<Group, Props>((props, ref) => {
     }
 
     if (hovered && !focused) {
-      group.current.position.y = Math.sin(t * 2) * 0.1;
+      group.current.position.y = Math.sin(t * 2) * 0.1 + config.defaultPosition[1];
     } else {
       if (!focused) group.current.position.y = config.defaultPosition[1];
     }

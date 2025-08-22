@@ -51,6 +51,9 @@ export default function Home() {
         </Link>
       </div>
 
+
+
+
       <div id="footer" className="h-full w-full">
         <Footer />
       </div>
