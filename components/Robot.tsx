@@ -62,25 +62,35 @@ function ResetSide({
 
   useEffect(() => {
     const cfg = ROBOT[side];
-    const idle = focus !== side && hover !== side;
+    const idle = focus !== side;
+    const controls = ctrlRef.current;
 
     if (idle) {
-      camera.position.set(...cfg.defaultCameraPosition);
-      camera.rotation.set(...cfg.defaultCameraRotation);
-
-      if (ctrlRef.current) {
-        ctrlRef.current.reset();
-        ctrlRef.current.enabled = false;
+      // 1) Reset controls to clear any damping/internals
+      if (controls) {
+        controls.reset(); // reset to internal baseline
+        controls.enabled = false;
+        // Ensure target is sane (center/or your robot origin)
+        controls.target.set(0, 0, 0);
       }
 
+      // 2) Now set your desired default camera
+      camera.position.set(...cfg.defaultCameraPosition);
+      camera.rotation.set(...cfg.defaultCameraRotation);
+      camera.updateProjectionMatrix();
+
+      // 3) Sync controls with the new camera/target
+      controls?.update();
+
+      // 4) Reset robot transforms
       const robot = scene.getObjectByName(side);
       if (robot) {
         robot.position.set(...cfg.defaultPosition);
         robot.rotation.set(...cfg.defaultRotation);
         robot.scale.setScalar(cfg.defaultScale);
       }
-    } else if (focus === side && ctrlRef.current) {
-      ctrlRef.current.enabled = true;
+    } else if (focus === side && controls) {
+      controls.enabled = true;
     }
   }, [focus, hover, side, camera, scene, ctrlRef]);
 
@@ -126,7 +136,6 @@ export default function RobotShowcase() {
   // Find center of canvas in pixels
   const canvasSwerve = (leftPct / 100) * width;
   const canvasHydra = ((100 - leftPct) / 100) * width;
-  console.log(focused, hovered);
   return (
     <div className=" relative flex w-full h-screen overflow-hidden bg-slate-900">
       {/* BACK TO PORTFOLIO BUTTON */}
@@ -137,8 +146,6 @@ export default function RobotShowcase() {
     z-50
     bg-slate-800/80 hover:bg-slate-700/80
     text-white
-
-    
     px-4 py-2 text-base
     lg:px-5 lg:py-2.5 lg:text-lg
     rounded-lg font-semibold shadow
@@ -278,6 +285,8 @@ export default function RobotShowcase() {
       {/* RESET BUTTON */}
       {focused && (
         <button
+          tabIndex={-1} // removes it from the focus order
+          onMouseDown={(e) => e.preventDefault()} // prevent default focus on click
           onClick={() => {
             setFocused(null);
             setHovered(null);

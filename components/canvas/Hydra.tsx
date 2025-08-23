@@ -100,7 +100,7 @@ const Hydra = forwardRef<Group, Props>((props, ref) => {
       tgtPos.current.set(0, -0.8, 0);
       tgtScale.current = 6.5;
     } else if (hovered) {
-      tgtPos.current.set(0.4, 0, 0);
+      tgtPos.current.set(0.4, config.defaultPosition[1], 0);
       tgtScale.current = 6;
     } else {
       tgtPos.current.set(...config.defaultPosition);
